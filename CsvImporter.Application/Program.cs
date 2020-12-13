@@ -4,6 +4,7 @@ using CsvImporter.Infraestructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.IO;
 
 namespace CsvImporter.Application
@@ -26,8 +27,14 @@ namespace CsvImporter.Application
             var config = LoadConfiguration();
             services.AddSingleton(config);
 
-            //database connection
-            
+            //Adding Logging
+            services.AddLogging(loggerBuilder =>
+            {
+                loggerBuilder.ClearProviders();
+                loggerBuilder.AddConsole();
+            });
+
+            //database connection            
             services.AddDbContext<AcmeContext>(
                 options => options.UseSqlServer(config.GetConnectionString("AcmeCorporationConnection"),
 
