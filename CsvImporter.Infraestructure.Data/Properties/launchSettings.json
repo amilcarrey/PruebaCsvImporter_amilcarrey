@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "CsvImporter.Infraestructure.Data": {
+      "commandName": "Project"
+    }
+  }
+}
