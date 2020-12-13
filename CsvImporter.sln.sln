@@ -1,15 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29905.134
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvImporter.Core", "CsvImporter.Core\CsvImporter.Core.csproj", "{831CD241-ABFD-4EF6-8A79-0584F55335D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvImporter.Core", "CsvImporter.Core\CsvImporter.Core.csproj", "{831CD241-ABFD-4EF6-8A79-0584F55335D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvImporter.Infraestructure", "CsvImporter.Infraestructure\CsvImporter.Infraestructure.csproj", "{26E9E13E-B415-45A1-8F01-C6738007BE26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvImporter.Infraestructure.Data", "CsvImporter.Infraestructure.Data\CsvImporter.Infraestructure.Data.csproj", "{26E9E13E-B415-45A1-8F01-C6738007BE26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvImporter.Tests", "CsvImporter.Tests\CsvImporter.Tests.csproj", "{3454063B-B56B-4E27-8CE3-BD9021994047}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvImporter.Tests", "CsvImporter.Tests\CsvImporter.Tests.csproj", "{3454063B-B56B-4E27-8CE3-BD9021994047}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvImporter.Application", "CsvImporter.Application\CsvImporter.Application.csproj", "{D35A5F78-F7CA-475B-8CEB-5E6F0354A056}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvImporter.Application", "CsvImporter.Application\CsvImporter.Application.csproj", "{D35A5F78-F7CA-475B-8CEB-5E6F0354A056}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,9 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{831CD241-ABFD-4EF6-8A79-0584F55335D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -72,5 +69,11 @@ Global
 		{D35A5F78-F7CA-475B-8CEB-5E6F0354A056}.Release|x64.Build.0 = Release|Any CPU
 		{D35A5F78-F7CA-475B-8CEB-5E6F0354A056}.Release|x86.ActiveCfg = Release|Any CPU
 		{D35A5F78-F7CA-475B-8CEB-5E6F0354A056}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {17030EBA-5A9B-40FA-9324-A3F8BFB42DB2}
 	EndGlobalSection
 EndGlobal
