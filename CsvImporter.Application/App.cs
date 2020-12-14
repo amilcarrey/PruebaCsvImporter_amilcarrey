@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using CsvImporter.Core.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -10,17 +11,16 @@ namespace CsvImporter.Application
     {
         private readonly IConfiguration _config;
         private ILogger<App> _logger;
-        public App(IConfiguration config, ILogger<App> logger)
+        private IStockService _stockService;
+        public App(IConfiguration config, ILogger<App> logger, IStockService stockService)
         {
             _config = config;
             _logger = logger;
+            _stockService = stockService;
         }
         public void Run()
         {
-            var appString = _config.GetValue<string>("AppString");
-            Console.WriteLine(appString);
-
-            _logger.LogInformation("PROBANDO EL LOGUEO");
+            _stockService.UpdateStockFromCsv();
 
             Console.ReadLine();
         }

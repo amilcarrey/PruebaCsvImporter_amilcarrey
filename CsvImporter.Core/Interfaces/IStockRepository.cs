@@ -7,7 +7,7 @@ namespace CsvImporter.Core.Interfaces
 {
     public interface IStockRepository
     {
-        public void Create(Stock stock);
+        public void Create(StockModel stock);
         public void Clear();
     }
 }

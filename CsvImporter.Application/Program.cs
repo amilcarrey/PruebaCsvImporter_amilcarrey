@@ -1,6 +1,7 @@
-﻿using CsvImporter.Application.Services;
-using CsvImporter.Core.Interfaces;
+﻿using CsvImporter.Core.Interfaces;
+using CsvImporter.Core.Services;
 using CsvImporter.Infraestructure.Data;
+using CsvImporter.Infraestructure.Data.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,15 +35,14 @@ namespace CsvImporter.Application
                 loggerBuilder.AddConsole();
             });
 
-            //database connection            
+            //database connection
             services.AddDbContext<AcmeContext>(
-                options => options.UseSqlServer(config.GetConnectionString("AcmeCorporationConnection"),
-
-                x => x.MigrationsAssembly("CsvImporter.Infraestructure.Data"))
+                options => options.UseSqlServer(config.GetConnectionString("AcmeCorporationConnection"))
             );
 
             //services
             services.AddTransient<IStockRepository, StockRepository>();
+            services.AddSingleton<ICsvFromUrl, CsvFromUrl>();
             services.AddScoped<IStockService, StockService>();
 
             // app
