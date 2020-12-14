@@ -8,8 +8,16 @@ namespace CsvImporter.Infraestructure.Data
 { 
     public class AcmeContext : DbContext
     {
+        //private const string connectionString = "Server=localhost\\SQLEXPRESS;Database=AcmeCorporation;Trusted_Connection=True;MultipleActiveResultSets=true;";
+
         public AcmeContext(DbContextOptions<AcmeContext> options) : base(options) { }
-        public DbSet<Stock> Stock { get; set; }
+        public DbSet<StockModel> Stock { get; set; }
+
+
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer(connectionString);
+        //}
 
     }
 }

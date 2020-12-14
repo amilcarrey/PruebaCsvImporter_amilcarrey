@@ -19,7 +19,7 @@ namespace CsvImporter.Infraestructure.Data
             throw new NotImplementedException();
         }
 
-        public void Create(Stock stock)
+        public void Create(StockModel stock)
         {
             _context.Stock.Add(stock);
             _context.SaveChanges();
