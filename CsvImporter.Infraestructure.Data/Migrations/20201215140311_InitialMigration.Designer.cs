@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CsvImporter.Infraestructure.Data.Migrations
 {
     [DbContext(typeof(AcmeContext))]
-    [Migration("20201214143355_Initial")]
-    partial class Initial
+    [Migration("20201215140311_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

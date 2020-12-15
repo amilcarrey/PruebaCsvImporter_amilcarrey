@@ -19,5 +19,13 @@ namespace CsvImporter.Infraestructure.Data
         //    optionsBuilder.UseSqlServer(connectionString);
         //}
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //Property Configurations
+            modelBuilder.Entity<StockModel>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
+        }
+
     }
 }
