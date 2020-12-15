@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CsvImporter.Core.Services
 {
@@ -20,33 +21,50 @@ namespace CsvImporter.Core.Services
             _stockRepository = stockRepository;
             _csvStream = csvStream;
         }
-        public void UpdateStockFromCsv()
+        public async Task UpdateStockFromCsvAsync()
         {
+            ClearStock();
+
             Stream response = _csvStream.GetCSVStream("https://storage10082020.blob.core.windows.net/y9ne9ilzmfld/Stock.CSV");
 
-            using (var reader = new StreamReader(@"C:\test.csv"))
-            //using (var reader = new StreamReader(response))
+            await AddFromCsvStream(response);
+        }
+        public async Task AddFromCsvStream(Stream csvStream)
+        {
+            int counter = 0;
+            List<StockModel> listRecords = new List<StockModel>();
+            //using (var reader = new StreamReader(@"C:\test.csv"))
+            //using (var reader = new StreamReader(@"C:\bigtest.csv"))
+            using (var reader = new StreamReader(csvStream))
             using (CsvReader csv = new CsvReader(reader, CultureInfo.InvariantCulture, true))
             {
                 csv.Configuration.Delimiter = ";";
                 foreach (var record in csv.GetRecords<StockModel>())
                 {
-                    AddStock(record);
-                    Console.WriteLine(record.ToString());
+                    counter++;
+                    listRecords.Add(record);
+                    if (counter == 10000)
+                    {
+                        await _stockRepository.CreateAsync(listRecords);
+                        counter = 0;
+                        listRecords.Clear();
+                    }
+                    Console.WriteLine(counter);
                 }
-            }
 
-
-
+                Console.WriteLine("TERMINO!");
+            }            
         }
-        public void AddStock(StockModel stock)
+
+        public void Save()
         {
-            _stockRepository.Create(stock);
+            _stockRepository.SaveChangeAsync();
         }
-
         public void ClearStock()
         {
             _stockRepository.Clear();
+            Console.WriteLine("CLEAR STOCK");
+            Console.ReadLine();
         }
     }
 }

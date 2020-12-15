@@ -20,7 +20,7 @@ namespace CsvImporter.Application
         }
         public void Run()
         {
-            _stockService.UpdateStockFromCsv();
+            _stockService.UpdateStockFromCsvAsync();
 
             Console.ReadLine();
         }

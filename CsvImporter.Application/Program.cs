@@ -41,7 +41,7 @@ namespace CsvImporter.Application
             );
 
             //services
-            services.AddTransient<IStockRepository, StockRepository>();
+            services.AddScoped<IStockRepository, StockRepository>();            
             services.AddSingleton<ICsvFromUrl, CsvFromUrl>();
             services.AddScoped<IStockService, StockService>();
 

@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.IO;
+using System.Threading.Tasks;
 
 namespace CsvImporter.Core.Services
 {
     public interface IStockService
     {
-        public void UpdateStockFromCsv();
-        public void AddStock(Entities.StockModel stock);
+        public Task UpdateStockFromCsvAsync();
+        public Task AddFromCsvStream(Stream csvStream);
         public void ClearStock();
     }
 }
