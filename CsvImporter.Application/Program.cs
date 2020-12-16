@@ -41,7 +41,8 @@ namespace CsvImporter.Application
             );
 
             //services
-            services.AddScoped<IStockRepository, StockRepository>();            
+            services.AddScoped<IStockRepository, StockRepository>();
+            services.AddScoped<IBulk, BulkUploadToSql>();
             services.AddSingleton<ICsvFromUrl, CsvFromUrl>();
             services.AddScoped<IStockService, StockService>();
 
