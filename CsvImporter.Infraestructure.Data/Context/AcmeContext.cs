@@ -24,7 +24,7 @@ namespace CsvImporter.Infraestructure.Data
             //Property Configurations
             modelBuilder.Entity<StockModel>()
                 .Property(p => p.Id)
-                .ValueGeneratedOnAdd();
+                ;
         }
 
     }

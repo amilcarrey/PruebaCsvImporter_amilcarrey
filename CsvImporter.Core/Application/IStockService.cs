@@ -6,7 +6,8 @@ namespace CsvImporter.Core.Services
     public interface IStockService
     {
         public Task UpdateStockFromCsvAsync();
-        public Task AddFromCsvStream(Stream csvStream);
+        public void AddFromCsvStream(Stream csvStream);
+        public Task AddFromCsvStreamAsync(Stream csvStream);
         public void ClearStock();
     }
 }

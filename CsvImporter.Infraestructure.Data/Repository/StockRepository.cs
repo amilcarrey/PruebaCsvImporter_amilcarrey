@@ -1,11 +1,9 @@
-﻿using CsvImporter.Core;
-using CsvImporter.Core.Entities;
+﻿using CsvImporter.Core.Entities;
 using CsvImporter.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace CsvImporter.Infraestructure.Data
 {
@@ -29,29 +27,28 @@ namespace CsvImporter.Infraestructure.Data
             _context.SaveChanges();
         }
 
-        public async System.Threading.Tasks.Task CreateAsync(List<StockModel> listStock)
+        public void CreateBulk(List<StockModel> listStock)
         {
+            _context.Stock.BulkInsert(listStock);
+        }
+
+        public async Task CreateBulkAsync(List<StockModel> listStock)
+        {             
             await _context.Stock.BulkInsertAsync(listStock);
             DetachAll();
-        }
-
-        public async System.Threading.Tasks.Task SaveChangeAsync()
-        {
-            await _context.SaveChangesAsync();            
-        }
-
+        }        
         public void DetachAll()
         {
-            var changedEntriesCopy = _context.ChangeTracker.Entries()
+            _context.ChangeTracker.Entries()
             .Where(e => e.State == EntityState.Added ||
                         e.State == EntityState.Modified ||
                         e.State == EntityState.Deleted ||
                         e.State == EntityState.Unchanged)
-            .ToList();
-
-            foreach (var entry in changedEntriesCopy)
-                entry.State = EntityState.Detached;
+            .ToList()
+            .AsParallel()
+            .ForAll(entry => entry.State = EntityState.Detached);
         }
+
         
     }
 }
