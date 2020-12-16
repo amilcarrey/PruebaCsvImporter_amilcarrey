@@ -9,7 +9,7 @@ using System.Text;
 
 namespace CsvImporter.Infraestructure.Data.Services
 {
-    class CsvFromAzureBlobStorage
+    class CsvFromAzureBlobStorage : ICsvFromAzureBlobStorage
     {
         private readonly IConfiguration _configuration;
         private ILogger<BulkUploadToSql> _logger;

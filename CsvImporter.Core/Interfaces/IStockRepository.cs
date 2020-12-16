@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 namespace CsvImporter.Core.Interfaces
 {
     public interface IStockRepository
-    {
-        public void Create(StockModel stock);        
+    {       
         public Task CreateBulkAsync(List<StockModel> stock);
         public void Clear();        
     }

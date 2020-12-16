@@ -1,5 +1,5 @@
-﻿using CsvImporter.Core.Interfaces;
-using CsvImporter.Core.Services;
+﻿using CsvImporter.Core.Application;
+using CsvImporter.Core.Interfaces;
 using CsvImporter.Infraestructure.Data;
 using CsvImporter.Infraestructure.Data.Services;
 using Microsoft.EntityFrameworkCore;

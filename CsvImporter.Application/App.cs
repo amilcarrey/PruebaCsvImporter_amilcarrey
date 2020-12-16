@@ -1,9 +1,7 @@
-﻿using CsvImporter.Core.Services;
+﻿using CsvImporter.Core.Application;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CsvImporter.Application
 {

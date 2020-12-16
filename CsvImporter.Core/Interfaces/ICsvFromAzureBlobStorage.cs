@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Text;
 
 namespace CsvImporter.Core.Interfaces
 {
-    public interface ICsvFromUrl
+    public interface ICsvFromAzureBlobStorage
     {
-        public Stream GetCSVStream(string url);
+        Stream GetCSVStream(string key, string container, string fileName);
     }
 }

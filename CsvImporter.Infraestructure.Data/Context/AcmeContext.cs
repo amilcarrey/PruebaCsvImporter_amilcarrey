@@ -13,19 +13,16 @@ namespace CsvImporter.Infraestructure.Data
         public AcmeContext(DbContextOptions<AcmeContext> options) : base(options) { }
         public DbSet<StockModel> Stock { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //Property Configurations
+            modelBuilder.Entity<StockModel>()
+                .Property(p => p.Id);
+        }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
         //    optionsBuilder.UseSqlServer(connectionString);
         //}
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            //Property Configurations
-            modelBuilder.Entity<StockModel>()
-                .Property(p => p.Id)
-                ;
-        }
-
     }
 }

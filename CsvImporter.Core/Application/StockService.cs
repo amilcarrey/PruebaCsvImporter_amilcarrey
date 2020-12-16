@@ -13,7 +13,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CsvImporter.Core.Services
+namespace CsvImporter.Core.Application
 {
     public class StockService : IStockService
     {
@@ -33,55 +33,14 @@ namespace CsvImporter.Core.Services
             ClearStock();
 
             Stream response = _csvStream.GetCSVStream("https://storage10082020.blob.core.windows.net/y9ne9ilzmfld/Stock.CSV");
-
-
-            //await AddFromCsvStreamAsync(response);
-            //AddFromCsvStreamParallelWay(response);
-            AddFromCsvStreamSqlCopyWay(response);
-            //AddFromCsvStreamSqlCopyWayParallel(response);
-            //AddFromCsvStreamParallelWaySqlCopy(response);
+            
+            AddFromCsvStreamSqlCopyWay(response);            
         }
-        public void AddFromCsvStream(Stream csvStream)
-        { }
-        public void AddFromCsvStreamSqlCopyWayParallel(Stream csvStream)
-        {
-            Stopwatch timeMeasure = new Stopwatch();
-            timeMeasure.Start();
-
-            _logger.LogInformation("We start the magic");
-
-            List<StockModel> listRecords = new List<StockModel>();
-            int counter = 0;
-            int limit = 500000;
-
-            //using (var reader = new StreamReader(@"C:\test.csv"))
-            using (var reader = new StreamReader(@"C:\bigtest.csv"))
-            //using (var reader = new StreamReader(csvStream))
-            using (CsvReader csv = new CsvReader(reader, CultureInfo.InvariantCulture, true))
-            {
-                csv.Configuration.Delimiter = ";";
-
-                Parallel.ForEach(csv.GetRecords<StockModel>(), (record) =>
-                {
-                    if (counter == limit || (reader.EndOfStream && counter < limit))
-                    {
-                        _bulkCreate.CreateBulk(listRecords);
-                        counter = 0;
-                        listRecords.Clear();
-                    }
-
-                    counter++;
-                    listRecords.Add(record);
-                    //Console.Clear();
-                    Console.WriteLine(counter);
-                });              
-
-                timeMeasure.Stop();
-                Console.WriteLine($"Tiempo: {timeMeasure.Elapsed.ToString("mm\\:ss")} ms");
-                Console.WriteLine("TERMINO!");
-                Console.ReadLine();
-            }
-        }
+        
+        /// <summary>
+        /// Guarda todos los registros de un csv, realizando varios bulk para optimizar memoria. No utiliza EF Core. 
+        /// </summary>
+        /// <param name="csvStream">Stream de datos</param>
         public void AddFromCsvStreamSqlCopyWay(Stream csvStream)
         {
             Stopwatch timeMeasure = new Stopwatch();
@@ -92,10 +51,8 @@ namespace CsvImporter.Core.Services
             List<StockModel> listRecords = new List<StockModel>();
             int counter = 0;
             int limit = 50000;
-
-            //using (var reader = new StreamReader(@"C:\test.csv"))
-            using (var reader = new StreamReader(@"C:\bigtest.csv"))
-            //using (var reader = new StreamReader(csvStream))
+                        
+            using (var reader = new StreamReader(csvStream))
             using (CsvReader csv = new CsvReader(reader, CultureInfo.InvariantCulture, true))
             {
                 csv.Configuration.Delimiter = ";";
@@ -121,6 +78,41 @@ namespace CsvImporter.Core.Services
                 Console.ReadLine();
             }
         }
+        /// <summary>
+        /// Guarda todos los registros de un csv utilizando paralelismo pero sin usar EF Core. La memoria crece exponencialmente según el numero de registros.         
+        /// </summary>
+        /// <param name="csvStream">Stream de datos</param>
+        public void AddFromCsvStreamParallelWaySqlCopy(Stream csvStream)
+        {
+            _logger.LogInformation("We start the magic");
+
+            Stopwatch timeMeasure = new Stopwatch();
+            timeMeasure.Start();
+
+            List<StockModel> listRecords = new List<StockModel>();
+
+            using (var reader = new StreamReader(csvStream))
+            using (CsvReader csv = new CsvReader(reader, CultureInfo.InvariantCulture, true))
+            {
+                csv.Configuration.Delimiter = ";";
+
+                listRecords = csv.GetRecords<StockModel>().AsParallel().ToList();
+
+                _bulkCreate.CreateBulk(listRecords);
+
+                timeMeasure.Stop();
+
+                Console.Clear();
+                Console.WriteLine(listRecords.Count);
+                Console.WriteLine($"Tiempo: {timeMeasure.Elapsed.ToString("mm\\:ss")} m");
+                Console.WriteLine("TERMINO!");
+                Console.ReadLine();
+            }
+        }
+        /// <summary>
+        /// Guarda todos los registros de un csv, realizando varios bulk para optimizar memoria. Utiliza EF Core.
+        /// </summary>
+        /// <param name="csvStream">Stream de datos</param>
         public async Task AddFromCsvStreamAsync(Stream csvStream)
         {
             Stopwatch timeMeasure = new Stopwatch();
@@ -132,9 +124,7 @@ namespace CsvImporter.Core.Services
             int counter = 0;
             int limit = 500000;
 
-            //using (var reader = new StreamReader(@"C:\test.csv"))
-            using (var reader = new StreamReader(@"C:\bigtest.csv"))
-            //using (var reader = new StreamReader(csvStream))
+            using (var reader = new StreamReader(csvStream))
             using (CsvReader csv = new CsvReader(reader, CultureInfo.InvariantCulture, true))
             {
                 csv.Configuration.Delimiter = ";";
@@ -159,7 +149,11 @@ namespace CsvImporter.Core.Services
                 Console.ReadLine();
             }
         }
-
+        /// <summary>
+        /// Guarda todos los registros de un csv utilizando paralelismo Utiliza EF Core. La memoria crece exponencialmente según el numero de registros.         
+        /// </summary>
+        /// <param name="csvStream"></param>
+        /// <returns></returns>
         public async Task AddFromCsvStreamParallelWay(Stream csvStream)
         {
             _logger.LogInformation("We start the magic");
@@ -189,35 +183,10 @@ namespace CsvImporter.Core.Services
                 Console.ReadLine();
             }
         }
-        public void AddFromCsvStreamParallelWaySqlCopy(Stream csvStream)
-        {
-            _logger.LogInformation("We start the magic");
-
-            Stopwatch timeMeasure = new Stopwatch();
-            timeMeasure.Start();
-
-            List<StockModel> listRecords = new List<StockModel>();
-
-            using (var reader = new StreamReader(@"C:\Stock.csv"))
-            //using (var reader = new StreamReader(@"C:\bigtest.csv"))
-            //using (var reader = new StreamReader(csvStream))
-            using (CsvReader csv = new CsvReader(reader, CultureInfo.InvariantCulture, true))
-            {
-                csv.Configuration.Delimiter = ";";
-
-                listRecords = csv.GetRecords<StockModel>().AsParallel().ToList();
-
-                _bulkCreate.CreateBulk(listRecords);
-
-                timeMeasure.Stop();
-
-                Console.Clear();
-                Console.WriteLine(listRecords.Count);
-                Console.WriteLine($"Tiempo: {timeMeasure.Elapsed.ToString("mm\\:ss")} m");
-                Console.WriteLine("TERMINO!");
-                Console.ReadLine();
-            }
-        }
+        
+        /// <summary>
+        /// Limpia la base de datos
+        /// </summary>
         public void ClearStock()
         {
             _stockRepository.Clear();
