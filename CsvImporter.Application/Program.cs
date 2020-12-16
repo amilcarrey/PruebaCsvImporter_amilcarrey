@@ -18,6 +18,8 @@ namespace CsvImporter.Application
 
             var serviceProvider = services.BuildServiceProvider();
 
+            serviceProvider.GetService<AcmeContext>().Database.EnsureCreated();                
+
             // calls the Run method in App, which is replacing Main
             serviceProvider.GetService<App>().Run();
         }
@@ -35,9 +37,11 @@ namespace CsvImporter.Application
                 loggerBuilder.AddConsole();
             });
 
+            var myDbContextAssemblyName = typeof(AcmeContext).Assembly.GetName().Name;
             //database connection
             services.AddDbContext<AcmeContext>(
-                options => options.UseSqlServer(config.GetConnectionString("AcmeCorporationConnection"))
+                options => options.UseSqlServer(config.GetConnectionString("AcmeCorporationConnection"),
+                x => x.MigrationsAssembly(myDbContextAssemblyName))
             );
 
             //services
