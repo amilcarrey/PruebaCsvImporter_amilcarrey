@@ -41,7 +41,7 @@ namespace CsvImporter.Core.Application
         /// <param name="csvStream">Stream de datos</param>
         public async Task AddFromCsvStreamSqlCopyWay(Stream csvStream)
         {
-            if (csvStream == null) throw new ArgumentNullException("csvStream");
+            if (Stream.Null.Equals(csvStream)) throw new ArgumentNullException("csvStream");
 
             Stopwatch timeMeasure = new Stopwatch();
             timeMeasure.Start();
@@ -50,17 +50,19 @@ namespace CsvImporter.Core.Application
             int counter = 0;
             int limit = 500000;
 
-            using (var reader = new StreamReader(@"C:\\bigtest.csv"))
-            //using (var reader = new StreamReader(csvStream))
+            //using (var reader = new StreamReader(@"C:\\bigtest.csv"))
+            using (var reader = new StreamReader(csvStream))
             using (CsvReader csv = new CsvReader(reader, CultureInfo.InvariantCulture, true))
             {
                 csv.Configuration.Delimiter = ";";
+
+                csv.ValidateHeader<StockModel>();
                 
                 foreach (var record in csv.GetRecords<StockModel>())
                 {
                     if (counter == limit || (reader.EndOfStream && counter < limit))
                     {
-                        await _bulk.CreateBulkAsync(listRecords);
+                        await CreateBulkAsync(listRecords);
                         counter = 0;
                         listRecords.Clear();
                     }
@@ -81,7 +83,7 @@ namespace CsvImporter.Core.Application
         /// <param name="csvStream">Stream de datos</param>
         public async Task AddFromCsvStreamParallelWaySqlCopy(Stream csvStream)
         {
-            if (csvStream == null) throw new ArgumentNullException("csvStream");
+            if (csvStream == Stream.Null) throw new ArgumentNullException("csvStream");
             Stopwatch timeMeasure = new Stopwatch();
             timeMeasure.Start();
 
@@ -95,7 +97,7 @@ namespace CsvImporter.Core.Application
                 ///TODO Make a refactor
                 listRecords = csv.GetRecords<StockModel>().AsParallel().ToList();
 
-                await _bulk.CreateBulkAsync(listRecords);
+                await CreateBulkAsync(listRecords);
 
                 timeMeasure.Stop();
 
@@ -111,7 +113,7 @@ namespace CsvImporter.Core.Application
         /// <param name="csvStream">Stream de datos</param>
         public async Task AddFromCsvStreamAsync(Stream csvStream)
         {
-            if (csvStream == null) throw new ArgumentNullException("csvStream");
+            if (csvStream == Stream.Null) throw new ArgumentNullException("csvStream");
 
             Stopwatch timeMeasure = new Stopwatch();
             timeMeasure.Start();
@@ -152,7 +154,7 @@ namespace CsvImporter.Core.Application
         /// <returns></returns>
         public async Task AddFromCsvStreamParallelWay(Stream csvStream)
         {
-            if (csvStream == null) throw new ArgumentNullException("csvStream");
+            if (csvStream == Stream.Null) throw new ArgumentNullException("csvStream");
 
             Stopwatch timeMeasure = new Stopwatch();
             timeMeasure.Start();
@@ -178,10 +180,14 @@ namespace CsvImporter.Core.Application
                 Console.ReadLine();
             }
         }
-        
+
         /// <summary>
         /// Limpia la base de datos
         /// </summary>
+        public async Task CreateBulkAsync(List<StockModel> listRecords)
+        {
+            await _bulk.CreateBulkAsync(listRecords);
+        }
         public Task<bool> ClearStock()
         {
             return _bulk.Clear();
