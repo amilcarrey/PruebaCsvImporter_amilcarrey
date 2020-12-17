@@ -73,9 +73,6 @@ Si `1.000.000 registros = ~36MB` toma 1:51 minutos en procesarse (111 segundos),
 
 ### SqlBulkCopy
 
-[https://medium.com/@kagacode/2-ways-to-run-bulk-insert-9d9f79f27639](https://medium.com/@kagacode/2-ways-to-run-bulk-insert-9d9f79f27639)
-
-Se puede hacer multithread de una descarga en curso?
 
 ## Librerias
 ### CsvHelper 
