@@ -49,6 +49,35 @@ namespace CsvImporter.Infraestructure.Data.Services
                 
             }
         }
+
+        public void CreateBulk(List<StockModel> stock)
+        {
+            using (SqlConnection Connection = new SqlConnection(_configuration.GetConnectionString("AcmeCorporationConnection")))
+            {
+                Connection.Open();
+                _logger.LogInformation("Connection Open");
+
+
+                _logger.LogInformation("Begin Bulk!");
+                using (SqlBulkCopy bulkCopy = new SqlBulkCopy(Connection))
+                using (var reader = ObjectReader.Create(stock, "Id", "PointOfSale", "Product", "Date", "Stock"))
+                {
+                    bulkCopy.DestinationTableName = "Stock";
+
+                    try
+                    {
+                        // Write from the source to the destination.
+                        bulkCopy.WriteToServer(reader);
+                        _logger.LogInformation("Write Succesfull");
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.Message, ex);
+                    }
+                }
+            }
+        }
+
         public async Task CreateBulkAsync(List<StockModel> stock)
         {
             using (SqlConnection Connection = new SqlConnection(_configuration.GetConnectionString("AcmeCorporationConnection")))
