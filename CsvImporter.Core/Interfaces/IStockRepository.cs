@@ -10,6 +10,6 @@ namespace CsvImporter.Core.Interfaces
     public interface IStockRepository
     {       
         public Task CreateBulkAsync(List<StockModel> stock);
-        public void Clear();        
+        public Task<bool> Clear();        
     }
 }

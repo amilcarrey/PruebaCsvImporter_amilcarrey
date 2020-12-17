@@ -5,11 +5,12 @@ namespace CsvImporter.Core.Application
 {
     public interface IStockService
     {
-        public Task UpdateStockFromCsvAsync();
-        public void AddFromCsvStreamSqlCopyWay(Stream csvStream);
-        public void AddFromCsvStreamParallelWaySqlCopy(Stream csvStream);
+        public void UpdateStockFromCsvAsync();
+        public Task AddFromCsvStreamSqlCopyWay(Stream csvStream);
+        public Task AddFromCsvStreamParallelWaySqlCopy(Stream csvStream);
         public Task AddFromCsvStreamAsync(Stream csvStream);
         public Task AddFromCsvStreamParallelWay(Stream csvStream);
-        public void ClearStock();
+        public Task<Stream> GetStream(string url);
+        public Task<bool> ClearStock();
     }
 }

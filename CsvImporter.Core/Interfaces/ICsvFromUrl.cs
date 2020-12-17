@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CsvImporter.Core.Interfaces
 {
     public interface ICsvFromUrl
     {
-        public Stream GetCSVStream(string url);
+        public Task<Stream> GetCSVStream(string url);
     }
 }

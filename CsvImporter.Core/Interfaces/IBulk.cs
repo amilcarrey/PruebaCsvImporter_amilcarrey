@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace CsvImporter.Core.Interfaces
 {
-    public interface IBulk
-    {
-        void CreateBulk(List<StockModel> stock);
-        Task CreateBulkAsync(List<StockModel> stock);
+    public interface IBulk : IStockRepository
+    {        
     }
 }

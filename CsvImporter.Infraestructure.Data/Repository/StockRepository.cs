@@ -1,6 +1,8 @@
 ﻿using CsvImporter.Core.Entities;
 using CsvImporter.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,33 +12,68 @@ namespace CsvImporter.Infraestructure.Data
     public class StockRepository : IStockRepository
     {
         public readonly AcmeContext _context;
-        public StockRepository(AcmeContext context)
+        private readonly ILogger<StockRepository> _logger;
+        public StockRepository(AcmeContext context, ILogger<StockRepository> logger)
         {
             _context = context;
-            _context.ChangeTracker.AutoDetectChangesEnabled = false;            
+            _context.ChangeTracker.AutoDetectChangesEnabled = false;
+            _logger = logger;
+
         }
-        public void Clear()
+        public async Task<bool> Clear()
         {
-            _context.Database.ExecuteSqlRaw("TRUNCATE TABLE STOCK");
-            _context.SaveChanges();
+            try
+            {
+                int rowAffected = await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE STOCK");
+                return rowAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return false;
+            }
+
         }
 
         public void Create(StockModel stock)
         {
-            _context.Stock.Add(stock);
-            _context.SaveChanges();
+            try
+            {
+                _context.Stock.Add(stock);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+            }
+            
         }
 
         public void CreateBulk(List<StockModel> listStock)
         {
-            _context.Stock.BulkInsert(listStock);
+            try
+            {
+                _context.Stock.BulkInsert(listStock);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+            }
         }
 
         public async Task CreateBulkAsync(List<StockModel> listStock)
-        {             
-            await _context.Stock.BulkInsertAsync(listStock);
-            DetachAll();
-        }        
+        {
+            try
+            {
+                await _context.Stock.BulkInsertAsync(listStock);
+                DetachAll();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+            }
+
+        }
         public void DetachAll()
         {
             _context.ChangeTracker.Entries()
@@ -49,6 +86,6 @@ namespace CsvImporter.Infraestructure.Data
             .ForAll(entry => entry.State = EntityState.Detached);
         }
 
-        
+
     }
 }

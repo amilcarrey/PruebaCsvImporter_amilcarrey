@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CsvImporter.Infraestructure.Data.Services
 {
@@ -15,15 +16,24 @@ namespace CsvImporter.Infraestructure.Data.Services
         {
             _logger = logger;
         }
-        public Stream GetCSVStream(string url)
+        public async Task<Stream> GetCSVStream(string url)
         {
-            _logger.LogInformation("Waiting response from url...");
-            HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
+            try
+            {
+                _logger.LogInformation("Waiting response from url...");
+                HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
 
-            _logger.LogInformation("Building response...");
-            HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+                _logger.LogInformation("Building response...");
+                HttpWebResponse response = await request.GetResponseAsync() as HttpWebResponse;
 
-            return response.GetResponseStream();
+                return response.GetResponseStream();
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return Stream.Null;
+            }
         }
     }
 }
