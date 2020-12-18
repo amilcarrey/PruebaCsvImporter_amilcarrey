@@ -1,3 +1,4 @@
+[![Action Status](https://github.com/amilcarrey/PruebaCsvImporter_amilcarrey/workflows/Build&Test/badge.svg)](https://github.com/amilcarrey/PruebaCsvImporter_amilcarrey/actions)
 # CsvImporter for Acme Corporation
 
 
@@ -74,11 +75,11 @@ Luego de implementar la librería probé con un archivo (local) de 1 millón de 
 
 | Batch Size| Tiempo (m) | RAM max|
 |--|--|--|
-| 10.000 | 2:38 m | 68,7 Mb
-| 50.000 | 2:23 m | 86,5 Mb
-| 100.000 | 2:18 m | 112,1 Mb 
-| 200.000 | 2:04 m | 163,7 Mb
-| 500.000 | 1:51 m | 310 Mb
+| 10.000 | 1:59 m | 66,1 Mb
+| 50.000 | 1:58 m | 82,6 Mb
+| 100.000 | 1:56 m | 108,3 Mb 
+| 200.000 | 2:01 m | 167,6 Mb
+| 500.000 | 2:00 m | 317,2 Mb
 
 Tomando el último valor puedo inferir que: 
 Si `1.000.000 registros = ~36MB` toma 1:51 minutos en procesarse (111 segundos), 
@@ -100,11 +101,10 @@ Un método antiguo pero no por eso ineficiente es crear las conexiones a "mano" 
 ### Performance
 Claramente la performance se puede mejorar si sacamos a la conexión como cuello de botella. En mi caso, por lo inestabilidad del mi proveedor de servicio, realicé todas las pruebas primeramente con un archivo local con 1 millon de registros que pesa 36 mb. Si planteamos un supuesto de una conexión de 300 mbps, un archivo de 700MB puede descargarse en ~19 segundos. Asumiendo ese tiempo y el espacio de almacenamiento para el archivo, se podría mejorar en gran medida la performance aplicando multithreading al parseo de los datos del archivo reduciendolo drasticamente. Hice unas pruebas  con la muestra de 36 MB y, sin tener en cuenta optimizaciones de memoriaun archivo de 1 millón de registros se procesó (ineficientemente) en 23 segundos, aproximadamente 75% más rápido y consumió 410 MB de memoria. El método está en `StockServices.cs` y se llama `AddByEfCoreWithParallelismAsync()`.
 
-Otra enfoque que me hubiera gustado probar es la implementación de [Apache Spark con su librería para .Net](https://dotnet.microsoft.com/apps/data/spark). Inclusive tienen un [connector para realizar BulkInserts](https://dotnet.microsoft.com/apps/data/spark). 
+Otra enfoque que me hubiera gustado probar es la implementación de [Apache Spark con su librería para .Net](https://dotnet.microsoft.com/apps/data/spark). Inclusive tienen un [connector para realizar BulkInserts](https://dotnet.microsoft.com/apps/data/spark) dentro de SqlServer. Aunque ya no entre para la primera iteración, de seguro la voy a probar para tener la comparación completa.  
 
 ### Testing
 El proyecto podría mejorar muchisimo en la parte de testing. Desde explotar más casos de prueba en los Unit Test hasta aplicar tests de integración. 
-
 
 ## Librerias
 ### CsvHelper 
