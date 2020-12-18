@@ -46,9 +46,18 @@ namespace CsvImporter.Tests
         }
 
         [Fact]
-        public async Task IfStreamIsNull_AddFromCsvStreamSqlCopyWay_ShouldThrowsAnException()
+        public void IfStreamIsNull_AddBySqlCopy_ShouldThrowsAnException()
         {
-            var exception = await Record.ExceptionAsync(() => _service.AddFromCsvStreamSqlCopyWay(Stream.Null));
+            var exception = Record.Exception(() => _service.AddBySqlCopy(Stream.Null));
+
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+
+        [Fact]
+        public async Task IfStreamIsNull_AddBySqlCopyAsync_ShouldThrowsAnException()
+        {
+            var exception = await Record.ExceptionAsync(() => _service.AddBySqlCopyAsync(Stream.Null));
 
             Assert.NotNull(exception);
             Assert.IsType<ArgumentNullException>(exception);

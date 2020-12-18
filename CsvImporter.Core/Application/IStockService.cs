@@ -8,11 +8,12 @@ namespace CsvImporter.Core.Application
     public interface IStockService
     {
         public void UpdateStockFromCsvAsync();
-        public Task AddFromCsvStreamSqlCopyWay(Stream csvStream);
-        public Task AddFromCsvStreamParallelWaySqlCopy(Stream csvStream);
-        public Task AddFromCsvStreamAsync(Stream csvStream);
-        public Task AddFromCsvStreamParallelWay(Stream csvStream);
-        public Task CreateBulkAsync(IList<StockModel> stockList);
+        public Task AddBySqlCopyAsync(Stream csvStream);
+        public void AddBySqlCopy(Stream csvStream);
+        public Task AddByEfCoreAsync(Stream csvStream);
+        public void AddByEfCore(Stream csvStream);
+        public Task AddByEfCoreWithParallelismAsync(Stream csvStream);
+        public Task CreateBulkAsync(List<StockModel> stockList);
         public Task<Stream> GetStream(string url);
         public Task<bool> ClearStock();
     }
