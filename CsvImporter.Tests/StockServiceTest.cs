@@ -34,6 +34,7 @@ namespace CsvImporter.Tests
             Assert.True(result);
         }
 
+
         [Theory]
         [InlineData("google.com")]
         [InlineData("/y9ne9ilzmfld/Stock.CSV")]
@@ -62,15 +63,34 @@ namespace CsvImporter.Tests
             Assert.NotNull(exception);
             Assert.IsType<ArgumentNullException>(exception);
         }
-        
-        //[Fact]
-        //public async Task IfStreamHasWrongStructure_AddFromCsvStreamSqlCopyWay_ShouldThrowsAnException()
-        //{
-        //    //Moq csv
-        //    //var exception = await Record.ExceptionAsync(() => _service.AddFromCsvStreamSqlCopyWay(Stream.Null));
 
-        //    //Assert.NotNull(exception);
-        //    //Assert.IsAssignableFrom<ValidationException>(exception);            
-        //}
+        [Fact]
+        public void IfStreamIsNull_AddByEfCore_ShouldThrowsAnException()
+        {
+            var exception = Record.Exception(() => _service.AddByEfCore(Stream.Null));
+
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+
+        [Fact]
+        public async Task IfStreamIsNull_AddByEfCoreWithParallelismAsync_ShouldThrowsAnException()
+        {
+            var exception = await Record.ExceptionAsync(() => _service.AddByEfCoreWithParallelismAsync(Stream.Null));
+
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+
+        [Fact]
+        public async Task IfStreamIsNull_AddByEfCoreAsync_ShouldThrowsAnException()
+        {
+            var exception = await Record.ExceptionAsync(() => _service.AddByEfCoreAsync(Stream.Null));
+
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+
+        
     }
 }

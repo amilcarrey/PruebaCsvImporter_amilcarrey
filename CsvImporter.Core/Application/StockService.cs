@@ -32,7 +32,7 @@ namespace CsvImporter.Core.Application
             
             Stream response = await GetStream("https://storage10082020.blob.core.windows.net/y9ne9ilzmfld/Stock.CSV");
 
-            await AddByEfCoreAsync(response);
+            await AddBySqlCopyAsync(response);
         }
 
         /// <summary>
@@ -94,9 +94,8 @@ namespace CsvImporter.Core.Application
 
             List<StockModel> listRecords = new List<StockModel>();
             int counter = 0;
-            int limit = 100000;
+            int limit = 500000;
 
-            //using (var reader = new StreamReader(@"C:\\bigtest.csv"))
             using (var reader = new StreamReader(csvStream))
             using (CsvReader csv = new CsvReader(reader, CultureInfo.InvariantCulture, true))
             {
@@ -184,8 +183,7 @@ namespace CsvImporter.Core.Application
             int counter = 0;
             int limit = 50000;
 
-            using (var reader = new StreamReader(@"C:\\bigtest.csv"))
-            //using (var reader = new StreamReader(csvStream))
+            using (var reader = new StreamReader(csvStream))
             using (CsvReader csv = new CsvReader(reader, CultureInfo.InvariantCulture, true))
             {
                 csv.Configuration.Delimiter = ";";
