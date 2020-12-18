@@ -32,7 +32,7 @@ namespace CsvImporter.Core.Application
             
             Stream response = await GetStream("https://storage10082020.blob.core.windows.net/y9ne9ilzmfld/Stock.CSV");
 
-            await AddBySqlCopyAsync(response);
+            AddBySqlCopy(response);
         }
 
         /// <summary>
@@ -51,7 +51,6 @@ namespace CsvImporter.Core.Application
             int counter = 0;
             int limit = 100000;
 
-            //using (var reader = new StreamReader(@"C:\\bigtest.csv"))
             using (var reader = new StreamReader(csvStream))
             using (CsvReader csv = new CsvReader(reader, CultureInfo.InvariantCulture, true))
             {
