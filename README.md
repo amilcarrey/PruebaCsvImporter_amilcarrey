@@ -2,7 +2,7 @@
 # CsvImporter for Acme Corporation
 
 
-Este proyecto es una aplicación desarrollada como requisito de una entrevista tecnica. Consta de consumir un archivo csv desde una cuenta de almacenamiento de Azure e insertar el contenido en una BD SQL Server local. 
+Este proyecto consta de consumir un archivo csv desde una cuenta de almacenamiento de Azure e insertar el contenido en una BD SQL Server local. 
 
 ## Run on dotnet 
 
